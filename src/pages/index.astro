@@ -5,6 +5,7 @@ import Section from '../components/Section.astro';
 import { persona, contacto, recorrido, filosofia, enfoque, stack } from '../data/perfil';
 
 const anio = new Date().getFullYear();
+const correo = contacto.find((c) => c.href.startsWith('mailto:'))!;
 ---
 
 <Base title={`${persona.nombre} — ${persona.rol}`} description={persona.descripcion}>
@@ -114,18 +115,9 @@ const anio = new Date().getFullYear();
         <p class="closing">
           Si tu equipo necesita a alguien que pruebe el software entendiendo cómo se construye, conversemos.
         </p>
-        <ul class="contact-list">
-          {
-            contacto.map((c) => (
-              <li>
-                <span class="label">{c.etiqueta}</span>
-                <a href={c.href} rel={c.href.startsWith('http') ? 'me noopener' : undefined}>
-                  {c.valor}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+        <p class="closing-mail">
+          <a href={correo.href}>{correo.valor}</a>
+        </p>
       </Section>
     </main>
 
@@ -280,15 +272,8 @@ const anio = new Date().getFullYear();
     line-height: var(--leading-snug);
   }
 
-  .contact-list {
-    display: grid;
-    gap: var(--space-4);
-    margin-top: var(--space-8);
-  }
-
-  .contact-list li {
-    display: grid;
-    gap: var(--space-1);
+  .closing-mail {
+    margin-top: var(--space-6);
     overflow-wrap: anywhere;
   }
 
@@ -329,12 +314,6 @@ const anio = new Date().getFullYear();
     .stack__row {
       grid-template-columns: 11rem 1fr;
       gap: var(--space-6);
-    }
-
-    .contact-list li {
-      grid-template-columns: 9rem 1fr;
-      gap: var(--space-6);
-      align-items: baseline;
     }
   }
 
