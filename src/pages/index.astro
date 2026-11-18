@@ -1,16 +1,351 @@
 ---
+import Base from '../layouts/Base.astro';
+import Monogram from '../components/Monogram.astro';
+import Section from '../components/Section.astro';
+import { persona, contacto, recorrido, filosofia, enfoque, stack } from '../data/perfil';
+
+const anio = new Date().getFullYear();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base title={`${persona.nombre} — ${persona.rol}`} description={persona.descripcion}>
+  <div class="page">
+    <header class="topbar">
+      <Monogram size={28} title={persona.nombre} />
+      <p class="label">{persona.ubicacion}</p>
+    </header>
+
+    <main id="contenido">
+      <section class="intro" aria-labelledby="nombre">
+        <p class="label">{persona.rol}</p>
+        <h1 id="nombre" class="intro__name">{persona.nombre}</h1>
+        <p class="intro__phrase">{persona.frase}</p>
+
+        <dl class="intro__contact">
+          {
+            contacto.map((c) => (
+              <div>
+                <dt class="label">{c.etiqueta}</dt>
+                <dd>
+                  <a href={c.href} rel={c.href.startsWith('http') ? 'me noopener' : undefined}>
+                    {c.valor}
+                  </a>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+
+      <Section id="recorrido" numero="01" titulo="Recorrido">
+        <ol class="timeline">
+          {
+            recorrido.map((r) => (
+              <li class="timeline__item">
+                <p class="label">{r.periodo}</p>
+                <div>
+                  <h3 class="item-title">{r.etapa}</h3>
+                  <p class="muted">{r.detalle}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </Section>
+
+      <Section id="filosofia" numero="02" titulo="Filosofía">
+        <ol class="principles">
+          {
+            filosofia.map((f, i) => (
+              <li class="principles__item">
+                <span class="label" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                <h3 class="item-title">{f.titulo}</h3>
+                <p class="muted">{f.detalle}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </Section>
+
+      <Section id="enfoque" numero="03" titulo="Enfoque de ingeniería">
+        <div class="focus">
+          {
+            enfoque.map((e) => (
+              <div class="focus__area">
+                <h3 class="item-title">{e.area}</h3>
+                <p class="label">{e.nota}</p>
+                <ul class="focus__list">
+                  {e.puntos.map((p) => (
+                    <li>{p}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </Section>
+
+      <Section id="stack" numero="04" titulo="Stack">
+        <div class="stack">
+          {
+            stack.map((s) => (
+              <div class="stack__tier">
+                <h3 class="label">{s.nivel}</h3>
+                <dl class="stack__groups">
+                  {s.grupos.map((g) => (
+                    <div class="stack__row">
+                      <dt class="muted">{g.nombre}</dt>
+                      <dd>
+                        <ul class="stack__items">
+                          {g.items.map((item) => (
+                            <li>{item}</li>
+                          ))}
+                        </ul>
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ))
+          }
+        </div>
+      </Section>
+
+      <Section id="contacto" numero="05" titulo="Contacto">
+        <p class="closing">
+          Si tu equipo necesita a alguien que pruebe el software entendiendo cómo se construye, conversemos.
+        </p>
+        <ul class="contact-list">
+          {
+            contacto.map((c) => (
+              <li>
+                <span class="label">{c.etiqueta}</span>
+                <a href={c.href} rel={c.href.startsWith('http') ? 'me noopener' : undefined}>
+                  {c.valor}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </Section>
+    </main>
+
+    <footer class="footer">
+      <p class="label">© {anio} {persona.nombre}</p>
+      <p class="label">{persona.formacion}</p>
+    </footer>
+  </div>
+</Base>
+
+<style>
+  .page {
+    max-width: var(--page-max);
+    margin-inline: auto;
+    padding-inline: var(--page-gutter);
+  }
+
+  .muted {
+    color: var(--color-text-muted);
+  }
+
+  .item-title {
+    font-size: var(--text-base);
+    font-weight: 600;
+  }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: var(--space-6);
+  }
+
+  /* Intro */
+  .intro {
+    display: grid;
+    gap: var(--space-4);
+    padding-block: var(--space-16) var(--space-12);
+  }
+
+  .intro__name {
+    font-size: var(--text-display);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.02em;
+  }
+
+  .intro__phrase {
+    max-width: 34ch;
+    font-size: var(--text-xl);
+    line-height: var(--leading-snug);
+    color: var(--color-text-muted);
+  }
+
+  .intro__contact {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+  }
+
+  .intro__contact dd {
+    overflow-wrap: anywhere;
+  }
+
+  /* Timeline */
+  .timeline {
+    display: grid;
+    gap: var(--space-8);
+    max-width: var(--measure);
+  }
+
+  .timeline__item {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .timeline__item .item-title {
+    margin-bottom: var(--space-1);
+  }
+
+  /* Principles */
+  .principles {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .principles__item {
+    display: grid;
+    gap: var(--space-2);
+    max-width: 40ch;
+  }
+
+  /* Focus */
+  .focus {
+    display: grid;
+    gap: var(--space-12);
+  }
+
+  .focus__area {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+
+  .focus__list {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+    color: var(--color-text-muted);
+  }
+
+  .focus__list li {
+    padding-left: var(--space-4);
+    border-left: var(--line);
+  }
+
+  /* Stack */
+  .stack {
+    display: grid;
+    gap: var(--space-12);
+  }
+
+  .stack__groups {
+    display: grid;
+    margin-top: var(--space-4);
+  }
+
+  .stack__row {
+    display: grid;
+    gap: var(--space-1);
+    padding-block: var(--space-3);
+    border-top: var(--line);
+  }
+
+  .stack__items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+  }
+
+  .stack__items li:not(:last-child)::after {
+    content: '·';
+    margin-left: var(--space-3);
+    color: var(--color-text-subtle);
+  }
+
+  /* Contact */
+  .closing {
+    max-width: 40ch;
+    font-size: var(--text-xl);
+    line-height: var(--leading-snug);
+  }
+
+  .contact-list {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+  }
+
+  .contact-list li {
+    display: grid;
+    gap: var(--space-1);
+    overflow-wrap: anywhere;
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding-block: var(--space-8);
+    border-top: var(--line);
+  }
+
+  @media (min-width: 48rem) {
+    .intro__contact {
+      grid-template-columns: repeat(3, auto);
+      justify-content: start;
+      column-gap: var(--space-12);
+    }
+
+    .timeline__item {
+      grid-template-columns: 9rem 1fr;
+      gap: var(--space-6);
+    }
+
+    /* Subgrid keeps titles and paragraphs aligned when a title wraps */
+    .principles {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: auto auto 1fr;
+      gap: var(--space-2) var(--space-8);
+    }
+
+    .principles__item {
+      grid-row: span 3;
+      grid-template-rows: subgrid;
+    }
+
+    .stack__row {
+      grid-template-columns: 11rem 1fr;
+      gap: var(--space-6);
+    }
+
+    .contact-list li {
+      grid-template-columns: 9rem 1fr;
+      gap: var(--space-6);
+      align-items: baseline;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .intro {
+      padding-block: var(--space-24) var(--space-16);
+    }
+
+    .focus {
+      grid-template-columns: 3fr 2fr;
+      gap: var(--space-12);
+    }
+  }
+</style>

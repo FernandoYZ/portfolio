@@ -1,0 +1,27 @@
+---
+// FY monogram: F and Y drawn with the same stroke on a 32×32 grid.
+// public/favicon.svg uses the same paths; keep them in sync.
+interface Props {
+  size?: number;
+  title?: string;
+}
+
+const { size = 32, title } = Astro.props;
+---
+
+<svg
+  width={size}
+  height={size}
+  viewBox="0 0 32 32"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2.5"
+  stroke-linecap="square"
+  stroke-linejoin="miter"
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+>
+  {title && <title>{title}</title>}
+  <path d="M7 26V6h8M7 15h6" />
+  <path d="M18 6l5 9 5-9M23 15v11" />
+</svg>
